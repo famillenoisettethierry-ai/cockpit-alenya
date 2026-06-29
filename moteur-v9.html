@@ -485,95 +485,80 @@ function clock(){
   stage.appendChild(leg);card.appendChild(stage);app.appendChild(card);
 }
 function bibCard(){
-  const b=DATA.bib,c=E('div','card');
-  c.appendChild(E('div','eyebrow',`${icon('bottle')} Biberons`));
+  var b=DATA.bib,c=E('div','card');
+  c.appendChild(E('div','eyebrow',icon('bottle')+' Biberons'));
 
-  /* ── Jauge speedometer OMS ── */
-  /* Arc 240°, start 210° (SVG clockwise), cx=155 cy=138 r=92 stroke=18 */
-  /* circ=385.2 | 700ml→len=299.5,off=-299.5 | 730ml→len=312.3 | OMS len=85.7 */
-  /* Positions calculées une fois, adaptées dynamiquement via fraction pct=b.total/900 */
-  const pct=Math.min(b.total/900,1);
-  const circ=385.2;
-  const fillLen=(pct*circ).toFixed(2);
-  /* OMS zone 700-900ml : offset=-299.5, len=85.7 */
-  const omsFill=Math.max(0,Math.min(b.total-700,200)/900*circ).toFixed(2);
-  /* Aiguille: angle=210+pct*240 degrés */
-  const aDeg=210+pct*240;
-  const aRad=aDeg*Math.PI/180;
-  const cx=155,cy=138,r=92;
-  const tipX=(cx+(r-10)*Math.cos(aRad)).toFixed(1);
-  const tipY=(cy+(r-10)*Math.sin(aRad)).toFixed(1);
-  const tailX=(cx-18*Math.cos(aRad)).toFixed(1);
-  const tailY=(cy-18*Math.sin(aRad)).toFixed(1);
-  const blX=(cx+2.5*(-Math.sin(aRad))).toFixed(1);
-  const blY=(cy+2.5*Math.cos(aRad)).toFixed(1);
-  const brX=(cx-2.5*(-Math.sin(aRad))).toFixed(1);
-  const brY=(cy-2.5*Math.cos(aRad)).toFixed(1);
-  /* Triangle indicateur extérieur */
-  const tTipX=(cx+(r+9)*Math.cos(aRad)).toFixed(1);
-  const tTipY=(cy+(r+9)*Math.sin(aRad)).toFixed(1);
-  const tBlX=(cx+(r+22)*Math.cos(aRad)+6*(-Math.sin(aRad))).toFixed(1);
-  const tBlY=(cy+(r+22)*Math.sin(aRad)+6*Math.cos(aRad)).toFixed(1);
-  const tBrX=(cx+(r+22)*Math.cos(aRad)-6*(-Math.sin(aRad))).toFixed(1);
-  const tBrY=(cy+(r+22)*Math.sin(aRad)-6*Math.cos(aRad)).toFixed(1);
+  var pct=Math.min(b.total/900,1);
+  var circ=385.2;
+  var fillLen=(pct*circ).toFixed(2);
+  var aDeg=210+pct*240;
+  var aRad=aDeg*Math.PI/180;
+  var cx=155,cy=138,r=92;
+  var tipX=(cx+(r-10)*Math.cos(aRad)).toFixed(1);
+  var tipY=(cy+(r-10)*Math.sin(aRad)).toFixed(1);
+  var tailX=(cx-18*Math.cos(aRad)).toFixed(1);
+  var tailY=(cy-18*Math.sin(aRad)).toFixed(1);
+  var blX=(cx+2.5*(-Math.sin(aRad))).toFixed(1);
+  var blY=(cy+2.5*Math.cos(aRad)).toFixed(1);
+  var brX=(cx-2.5*(-Math.sin(aRad))).toFixed(1);
+  var brY=(cy-2.5*Math.cos(aRad)).toFixed(1);
+  var tTipX=(cx+(r+9)*Math.cos(aRad)).toFixed(1);
+  var tTipY=(cy+(r+9)*Math.sin(aRad)).toFixed(1);
+  var tBlX=(cx+(r+22)*Math.cos(aRad)+6*(-Math.sin(aRad))).toFixed(1);
+  var tBlY=(cy+(r+22)*Math.sin(aRad)+6*Math.cos(aRad)).toFixed(1);
+  var tBrX=(cx+(r+22)*Math.cos(aRad)-6*(-Math.sin(aRad))).toFixed(1);
+  var tBrY=(cy+(r+22)*Math.sin(aRad)-6*Math.cos(aRad)).toFixed(1);
 
-  const gaugeDiv=E('div','bib-gauge');
-  gaugeDiv.innerHTML=`<svg width="310" height="218" viewBox="10 8 290 218" fill="none" style="overflow:visible">
-    <defs>
-      <linearGradient id="bfg" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#D4C4EA"/>
-        <stop offset="100%" stop-color="#9B74C4"/>
-      </linearGradient>
-    </defs>
-    <path d="M 75 92 A 92 92 0 1 1 155 230" stroke="#EDE9F6" stroke-width="18" fill="none" stroke-linecap="round"/>
-    <path d="M 75 92 A 92 92 0 1 1 155 230" stroke="#699F82" stroke-width="20" fill="none"
-          stroke-dasharray="85.71 385.20" stroke-dashoffset="-299.49" stroke-linecap="butt"/>
-    <path d="M 75 92 A 92 92 0 1 1 155 230" stroke="url(#bfg)" stroke-width="18" fill="none"
-          stroke-dasharray="${fillLen} 385.20" stroke-linecap="round"/>
-    <line x1="86.6" y1="99.5" x2="65.0" y2="83.5" stroke="#D8D2EC" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="111.8" y1="72.0" x2="97.5" y2="50.2" stroke="#E0DAF0" stroke-width="1" stroke-linecap="round"/>
-    <line x1="145.9" y1="59.2" x2="142.9" y2="34.2" stroke="#E0DAF0" stroke-width="1" stroke-linecap="round"/>
-    <line x1="182.0" y1="50.8" x2="190.9" y2="37.3" stroke="#D8D2EC" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="212.4" y1="84.7" x2="231.3" y2="65.9" stroke="#E0DAF0" stroke-width="1" stroke-linecap="round"/>
-    <line x1="230.6" y1="115.5" x2="255.4" y2="108.1" stroke="#E0DAF0" stroke-width="1" stroke-linecap="round"/>
-    <line x1="232.8" y1="151.7" x2="258.4" y2="156.3" stroke="#D8D2EC" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="218.3" y1="185.3" x2="238.0" y2="199.9" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-    <line x1="190.4" y1="208.7" x2="202.0" y2="230.1" stroke="#C5E8D4" stroke-width="1" stroke-linecap="round"/>
-    <line x1="155" y1="217" x2="155" y2="243" stroke="#C5E8D4" stroke-width="1.5" stroke-linecap="round"/>
-    <text x="52.8" y="83" font-family="DM Mono,monospace" font-size="10" fill="#C8C0DC" text-anchor="middle">0</text>
-    <text x="195" y="31" font-family="DM Mono,monospace" font-size="10" fill="#C8C0DC" text-anchor="middle">300</text>
-    <text x="271" y="162" font-family="DM Mono,monospace" font-size="10" fill="#C8C0DC" text-anchor="middle">600</text>
-    <text x="250" y="213" font-family="DM Mono,monospace" font-size="10" fill="#699F82" text-anchor="start" font-weight="500">700</text>
-    <text x="155" y="260" font-family="DM Mono,monospace" font-size="10" fill="#699F82" text-anchor="middle" font-weight="500">900</text>
-    <polygon points="${tTipX},${tTipY} ${tBlX},${tBlY} ${tBrX},${tBrY}" fill="#E0982E"/>
-    <polygon points="${tipX},${tipY} ${blX},${blY} ${tailX},${tailY} ${brX},${brY}" fill="#1E1D42"/>
-    <circle cx="${cx}" cy="${cy}" r="6.5" fill="#1E1D42"/>
-    <circle cx="${cx}" cy="${cy}" r="3" fill="#fff"/>
-    <text x="${cx}" y="120" font-family="Fraunces,serif" font-style="italic" font-weight="800"
-          font-size="32" fill="#30326A" text-anchor="middle" letter-spacing="-1">${b.total}</text>
-    <text x="${cx}" y="134" font-family="DM Mono,monospace" font-size="9"
-          fill="#699F82" text-anchor="middle" font-weight="500" letter-spacing=".04em">ML · ✓ OMS</text>
-  </svg>`;
+  var gaugeDiv=E('div','bib-gauge');
+  gaugeDiv.innerHTML='<svg width="310" height="218" viewBox="10 8 290 218" fill="none" style="overflow:visible">'
+    +'<defs><linearGradient id="bfg" x1="0%" y1="0%" x2="100%" y2="0%">'
+    +'<stop offset="0%" stop-color="#D4C4EA"/><stop offset="100%" stop-color="#9B74C4"/>'
+    +'</linearGradient></defs>'
+    +'<path d="M 75 92 A 92 92 0 1 1 155 230" stroke="#EDE9F6" stroke-width="18" fill="none" stroke-linecap="round"/>'
+    +'<path d="M 75 92 A 92 92 0 1 1 155 230" stroke="#699F82" stroke-width="20" fill="none" stroke-dasharray="85.71 385.20" stroke-dashoffset="-299.49" stroke-linecap="butt"/>'
+    +'<path d="M 75 92 A 92 92 0 1 1 155 230" stroke="url(#bfg)" stroke-width="18" fill="none" stroke-dasharray="'+fillLen+' 385.20" stroke-linecap="round"/>'
+    +'<line x1="86.6" y1="99.5" x2="65.0" y2="83.5" stroke="#D8D2EC" stroke-width="1.5" stroke-linecap="round"/>'
+    +'<line x1="111.8" y1="72.0" x2="97.5" y2="50.2" stroke="#E0DAF0" stroke-width="1" stroke-linecap="round"/>'
+    +'<line x1="145.9" y1="59.2" x2="142.9" y2="34.2" stroke="#E0DAF0" stroke-width="1" stroke-linecap="round"/>'
+    +'<line x1="182.0" y1="50.8" x2="190.9" y2="37.3" stroke="#D8D2EC" stroke-width="1.5" stroke-linecap="round"/>'
+    +'<line x1="212.4" y1="84.7" x2="231.3" y2="65.9" stroke="#E0DAF0" stroke-width="1" stroke-linecap="round"/>'
+    +'<line x1="230.6" y1="115.5" x2="255.4" y2="108.1" stroke="#E0DAF0" stroke-width="1" stroke-linecap="round"/>'
+    +'<line x1="232.8" y1="151.7" x2="258.4" y2="156.3" stroke="#D8D2EC" stroke-width="1.5" stroke-linecap="round"/>'
+    +'<line x1="218.3" y1="185.3" x2="238.0" y2="199.9" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>'
+    +'<line x1="190.4" y1="208.7" x2="202.0" y2="230.1" stroke="#C5E8D4" stroke-width="1" stroke-linecap="round"/>'
+    +'<line x1="155" y1="217" x2="155" y2="243" stroke="#C5E8D4" stroke-width="1.5" stroke-linecap="round"/>'
+    +'<text x="52.8" y="83" font-family="DM Mono,monospace" font-size="10" fill="#C8C0DC" text-anchor="middle">0</text>'
+    +'<text x="195" y="31" font-family="DM Mono,monospace" font-size="10" fill="#C8C0DC" text-anchor="middle">300</text>'
+    +'<text x="271" y="162" font-family="DM Mono,monospace" font-size="10" fill="#C8C0DC" text-anchor="middle">600</text>'
+    +'<text x="250" y="213" font-family="DM Mono,monospace" font-size="10" fill="#699F82" text-anchor="start" font-weight="500">700</text>'
+    +'<text x="155" y="260" font-family="DM Mono,monospace" font-size="10" fill="#699F82" text-anchor="middle" font-weight="500">900</text>'
+    +'<polygon points="'+tTipX+','+tTipY+' '+tBlX+','+tBlY+' '+tBrX+','+tBrY+'" fill="#E0982E"/>'
+    +'<polygon points="'+tipX+','+tipY+' '+blX+','+blY+' '+tailX+','+tailY+' '+brX+','+brY+'" fill="#1E1D42"/>'
+    +'<circle cx="'+cx+'" cy="'+cy+'" r="6.5" fill="#1E1D42"/>'
+    +'<circle cx="'+cx+'" cy="'+cy+'" r="3" fill="#fff"/>'
+    +'<text x="'+cx+'" y="120" font-family="Fraunces,serif" font-style="italic" font-weight="800" font-size="32" fill="#30326A" text-anchor="middle" letter-spacing="-1">'+b.total+'</text>'
+    +'<text x="'+cx+'" y="134" font-family="DM Mono,monospace" font-size="9" fill="#699F82" text-anchor="middle" font-weight="500" letter-spacing=".04em">ML · ✓ OMS</text>'
+    +'</svg>';
   c.appendChild(gaugeDiv);
 
-  /* ── Barres fines par prise ── */
-  const maxV=Math.max(...b.list.map(x=>x.v));
-  const prisesDiv=E('div','bib-prises');
-  b.list.forEach((x,i)=>{
-    const row=E('div','bib-prow');
-    const isLast=(i===b.list.length-1);
-    row.innerHTML=`<div class="bib-ptime">${x.t}</div>
-      <div class="bib-track"><div class="bib-fill" style="width:${(x.v/maxV*100).toFixed(1)}%;background:${isLast?'#699F82':'#9B74C4'}"></div></div>
-      <div class="bib-val">${x.v} ml</div>`;
+  var maxV=Math.max.apply(null,b.list.map(function(x){return x.v;}));
+  var prisesDiv=E('div','bib-prises');
+  b.list.forEach(function(x,i){
+    var row=E('div','bib-prow');
+    var isLast=(i===b.list.length-1);
+    var fillColor=isLast?'#699F82':'#9B74C4';
+    var pct100=(x.v/maxV*100).toFixed(1);
+    row.innerHTML='<div class="bib-ptime">'+x.t+'</div>'
+      +'<div class="bib-track"><div class="bib-fill" style="width:'+pct100+'%;background:'+fillColor+'"></div></div>'
+      +'<div class="bib-val">'+x.v+' ml</div>';
     prisesDiv.appendChild(row);
   });
   c.appendChild(prisesDiv);
 
-  /* ── Comparatifs + OMS ── */
-  const cmp=E('div','compare');
-  b.cmp.forEach(x=>{const s=E('span',x.c||'flat');s.innerHTML=(x.c?icon(x.c):'')+x.l;cmp.appendChild(s);});
+  var cmp=E('div','compare');
+  b.cmp.forEach(function(x){var s=E('span',x.c||'flat');s.innerHTML=(x.c?icon(x.c):'')+x.l;cmp.appendChild(s);});
   c.appendChild(cmp);
-  const oms=E('div','oms'+(b.omsClass?' '+b.omsClass:''));oms.innerHTML=icon('check')+b.oms;c.appendChild(oms);
+  var oms=E('div','oms'+(b.omsClass?' '+b.omsClass:''));oms.innerHTML=icon('check')+b.oms;c.appendChild(oms);
   app.appendChild(c);
 }
 function sleepCard(){
